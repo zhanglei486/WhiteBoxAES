@@ -5,6 +5,7 @@ OBJECTS2	  := $(CXXSOURCES:.cpp=.o)
 OBJECTS2	  := $(CXXSOURCES:.c=.o)
 CFLAGS	   	   = -Wall -Wextra -std=c99 -O2
 CPPFLAGS       = -lntl -lgmp -lm
+CPPFLAGS+= -lpthread
 LDFLAGS	       =
 EXEC 	      := whitebox
 EXEC2         := genTables

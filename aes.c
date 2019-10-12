@@ -111,9 +111,8 @@ void expandKey (u8 key[16], u8 expandedKey[176]) {
 }
 
 
-void aes_128_encrypt (u8 input[16], u8 output[16]) {
+void aes_128_encrypt (u8 key[16], u8 input[16], u8 output[16]) {
   u8 expandedKey[176];
-  u8 key[16] = {0};
 
   expandKey (key, expandedKey);
 

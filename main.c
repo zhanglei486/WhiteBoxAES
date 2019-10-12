@@ -42,15 +42,26 @@ void asciiStr2hex (char * in, char * out, int len){
 }
 
 int main(int argc, char * argv[]){
-        unsigned char OUT[32];
-        unsigned char IN[32];
-        asciiStr2hex(argv[1], (char *)IN, 32);
+        unsigned char key[16]={0,};
+        unsigned char OUT[32]={0,};
+        unsigned char IN[32]={0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10,};
+        unsigned char IN2[32]={0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10,};
+        if(argc>1)
+		asciiStr2hex(argv[1], (char *)IN, 32);
         //unsigned char IN[32] = "00112233445566778899aabbccddeeff";
+
+        printf("key:\n");
+        printstate(key);
+        printf("plaintext:\n");
         printstate(IN);
 
-        aes_128_table_encrypt(IN, OUT);
-
+        aes_128_encrypt (key, IN, OUT);
+        printf("standard aes,output:\n");
         printstate(OUT);
+
+        aes_128_table_encrypt(IN2, OUT);
+	printf("whitebox aes,output:\n");
+	printstate(OUT);
 
         return 0;
 }
