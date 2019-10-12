@@ -62,7 +62,7 @@ void computeTables (u8 expandedKey[176])
   vec_GF2 vAA, vBB, vCC, vDD;
   u32 aa, bb, cc, dd;
   RandMat mb_8x8[10][16], mb_32x32[10][4];
- 
+  int shiftTab[16] = {0, 5, 10, 15, 4, 9, 14, 3, 8, 13, 2, 7, 12, 1, 6, 11}; 
   // Initialize random mixing bijections
   for (int i = 0; i < 10; i++)
   {
@@ -83,15 +83,12 @@ void computeTables (u8 expandedKey[176])
     {
       for (int x = 0; x < 256; x++)
       {
-        mixBijIn[i][j][x] = vec2int(mb_8x8[i][j].mat * int2vec(x, 8), 8);
+        mixBijIn[i][j][x] = vec2int(mb_8x8[i][shiftTab[j]].mat * int2vec(x, 8), 8);
       }
       for (int x = 0; x < 256; x++)
       {
         u32 tmp = x;
         // Input mixing bijection
-        if ((i > 0) && (i < 9)) { 
-          tmp = vec2int(mb_8x8[i-1][j].invMat * int2vec(x, 8), 8);       
-        }
         
         if ((i > 0) && (i < 9))
         {
@@ -118,17 +115,17 @@ void computeTables (u8 expandedKey[176])
     {
         for (int x = 0; x < 256; x++)
         {
-          if (i < 9)
+          mixBijIn[i][4*j + 0][x] = x;
+          mixBijIn[i][4*j + 1][x] = x;
+          mixBijIn[i][4*j + 2][x] = x;
+          mixBijIn[i][4*j + 3][x] = x;
+          if (i < 8)
           {
-            mixBijIn[i][4*j + 0][x] = vec2int(mb_8x8[i][4*j + 0].mat * int2vec(x, 8), 8);
-            mixBijIn[i][4*j + 1][x] = vec2int(mb_8x8[i][4*j + 1].mat * int2vec(x, 8), 8);
-            mixBijIn[i][4*j + 2][x] = vec2int(mb_8x8[i][4*j + 2].mat * int2vec(x, 8), 8);
-            mixBijIn[i][4*j + 3][x] = vec2int(mb_8x8[i][4*j + 3].mat * int2vec(x, 8), 8);
+            mixBijIn[i][4*j + 0][x] = vec2int(mb_8x8[i][4*j + 0].invMat * int2vec(x, 8), 8);
+            mixBijIn[i][4*j + 1][x] = vec2int(mb_8x8[i][4*j + 1].invMat * int2vec(x, 8), 8);
+            mixBijIn[i][4*j + 2][x] = vec2int(mb_8x8[i][4*j + 2].invMat * int2vec(x, 8), 8);
+            mixBijIn[i][4*j + 3][x] = vec2int(mb_8x8[i][4*j + 3].invMat * int2vec(x, 8), 8);
 
-            mixBijIn[i][4*j + 0][x] = x;
-            mixBijIn[i][4*j + 1][x] = x;
-            mixBijIn[i][4*j + 2][x] = x;
-            mixBijIn[i][4*j + 3][x] = x;
           }
         }
 
